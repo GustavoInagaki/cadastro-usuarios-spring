@@ -2,6 +2,7 @@ package br.com.InagaGustavo.CadastroUsuarios.Controller;
 
 import br.com.InagaGustavo.CadastroUsuarios.Repository.UsuarioRepository;
 import br.com.InagaGustavo.CadastroUsuarios.model.Usuario;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ public class UsuarioController {
     private final UsuarioRepository usuarioRepository;
 
     @PostMapping
-    public ResponseEntity<Usuario> criar(@RequestBody Usuario usuario){
+    public ResponseEntity<Usuario> criar(@Valid @RequestBody Usuario usuario){
         Usuario usuariosCriados = usuarioRepository.save(usuario);
         return ResponseEntity.status(201).body(usuariosCriados);
 
