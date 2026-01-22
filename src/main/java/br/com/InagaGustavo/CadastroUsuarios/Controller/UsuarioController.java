@@ -3,6 +3,7 @@ package br.com.InagaGustavo.CadastroUsuarios.Controller;
 import br.com.InagaGustavo.CadastroUsuarios.Repository.UsuarioRepository;
 import br.com.InagaGustavo.CadastroUsuarios.model.Usuario;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,21 +17,28 @@ public class UsuarioController {
     private final UsuarioRepository usuarioRepository;
 
     @PostMapping
-    public Usuario criar(@RequestBody Usuario usuario){
+    public ResponseEntity<Usuario> criar(@RequestBody Usuario usuario){
+        Usuario usuariosCriados = usuarioRepository.save(usuario);
+        return ResponseEntity.status(201).body(usuariosCriados);
 
-        return usuarioRepository.save(usuario);
     }
 
     @GetMapping({"/{id}"})
-    public Usuario buscarPorId(@PathVariable Long id) {
-        return usuarioRepository.findById(id).orElse(null);
-
+    public ResponseEntity<Usuario> buscarPorId(@PathVariable Long id){
+        return usuarioRepository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("{id}")
-    public void deletar(@PathVariable Long id){
+    public ResponseEntity<Usuario> deletar(@PathVariable Long id){
+        if(!usuarioRepository.existsById(id)){
+            return ResponseEntity.notFound().build();
+        }
 
         usuarioRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
+
     }
 
     @GetMapping
