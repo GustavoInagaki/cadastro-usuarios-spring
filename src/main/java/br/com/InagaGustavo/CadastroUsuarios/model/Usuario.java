@@ -16,20 +16,18 @@ import lombok.NoArgsConstructor;
 public class Usuario {
 
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Nome é obrigatório")
+
     @Column(nullable = false)
     private String nome;
 
-    @NotBlank(message = "Email é obrigatório")
-    @Email(message = "Email inválido")
+
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Min(value = 0, message = "Idade não pode ser negativa")
+
     @Column(nullable = false)
     private Integer idade;
 }
