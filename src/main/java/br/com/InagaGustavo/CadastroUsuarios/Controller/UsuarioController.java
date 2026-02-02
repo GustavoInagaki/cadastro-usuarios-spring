@@ -7,8 +7,13 @@ import br.com.InagaGustavo.CadastroUsuarios.model.Usuario;
 import br.com.InagaGustavo.CadastroUsuarios.service.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 
@@ -45,10 +50,15 @@ public class UsuarioController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UsuarioResponseDTO>> listar(){
-
-        return ResponseEntity.ok(usuarioService.listar());
-
+    public ResponseEntity<Page<UsuarioResponseDTO>> listar(
+            @PageableDefault(
+                    page = 0,
+                    size = 5,
+                    sort = "nome",
+                    direction = Sort.Direction.ASC
+            )Pageable pageable
+    ) {
+        return ResponseEntity.ok(usuarioService.listar(pageable));
     }
 
 

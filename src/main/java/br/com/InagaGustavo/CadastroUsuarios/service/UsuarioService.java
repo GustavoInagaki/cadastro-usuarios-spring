@@ -6,9 +6,12 @@ import br.com.InagaGustavo.CadastroUsuarios.dto.UsuarioRequestDTO;
 import br.com.InagaGustavo.CadastroUsuarios.dto.UsuarioResponseDTO;
 import br.com.InagaGustavo.CadastroUsuarios.exception.UsuarioNaoEncontradoException;
 import br.com.InagaGustavo.CadastroUsuarios.model.Usuario;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+
+
 
 @Service
 public class UsuarioService {
@@ -37,25 +40,24 @@ public class UsuarioService {
 
     public UsuarioResponseDTO buscarPorId(Long id) {
         return usuarioRepository.findById(id)
-                .map(u -> new UsuarioResponseDTO(
-                        u.getId(),
-                        u.getNome(),
-                        u.getEmail(),
-                        u.getIdade()
+                .map(usuario -> new UsuarioResponseDTO(
+                        usuario.getId(),
+                        usuario.getNome(),
+                        usuario.getEmail(),
+                        usuario.getIdade()
                 ))
                 .orElseThrow(() -> new UsuarioNaoEncontradoException(id));
     }
 
-    public List<UsuarioResponseDTO> listar() {
-        return usuarioRepository.findAll()
-                .stream()
-                .map(u -> new UsuarioResponseDTO(
-                        u.getId(),
-                        u.getNome(),
-                        u.getEmail(),
-                        u.getIdade()
-                ))
-                .toList();
+    public Page<UsuarioResponseDTO> listar(Pageable pageable) {
+        return usuarioRepository
+                .findAll(pageable)
+                .map(usuario -> new UsuarioResponseDTO(
+                        usuario.getId(),
+                        usuario.getNome(),
+                        usuario.getEmail(),
+                        usuario.getIdade()
+                ));
     }
 
     public void deletar(Long id) {
